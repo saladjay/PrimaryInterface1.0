@@ -1,5 +1,7 @@
-﻿using System;
+﻿using PrimaryInterface1._0.Model;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +22,22 @@ namespace PrimaryInterface1._0
     /// </summary>
     public partial class MainWindow : Window
     {
+        ObservableCollection<DeviceModel> collection = new ObservableCollection<DeviceModel>();
         public MainWindow()
         {
             InitializeComponent();
+            interfacegrid.ItemsSource = collection;
+
+        }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            collection.Add(new DeviceModel("123", 4));
+        }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            collection?.RemoveAt(0);
         }
     }
 }
