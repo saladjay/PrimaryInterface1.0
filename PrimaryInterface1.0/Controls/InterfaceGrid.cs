@@ -1,4 +1,5 @@
 ﻿using MS.Internal.PresentationFramework;
+using PrimaryInterface1._0.Core;
 using PrimaryInterface1._0.Model;
 using System;
 using System.Collections;
@@ -88,7 +89,7 @@ namespace PrimaryInterface1._0.Controls
                 {
                     ConstructionHelper.Add(element);
                 }
-                foreach (List<CellState> RowList in cellsState)
+                foreach (List<CellState> RowList in ViewModel.cellsState)
                 {
                     for (int i = 0; i < device.InterfaceCount+1; i++)
                     {
@@ -101,9 +102,9 @@ namespace PrimaryInterface1._0.Controls
                 }
                 for (int i = 0; i < device.InterfaceCount+1; i++)
                 {
-                    cellsState.Add(new List<Model.CellState>(RowCreateHelper));
+                    ViewModel.cellsState.Add(new List<Model.CellState>(RowCreateHelper));
                 }
-                foreach (List<CellState> RowList in cellsState)
+                foreach (List<CellState> RowList in ViewModel.cellsState)
                 {
                     foreach (var e in RowList)
                     {
@@ -200,9 +201,23 @@ namespace PrimaryInterface1._0.Controls
                                 MBinding.Bindings.Add(B2);
                                 MBinding.Converter = Converter.CellStateConverter;
                                 TempCLabel.SetBinding(CLabel.IsSelectedProperty, MBinding);
-
                             }
                         }
+                    }
+                }
+
+                for (int i = 0; i < device.InterfaceCount + 1; i++)
+                {
+                    if(i==0)
+                    {
+                        foreach (var e in ConstructionHelper)
+                        {
+                            CToggleBtn TempBtn = new CToggleBtn() { };
+                        }
+                    }
+                    else
+                    {
+
                     }
                 }
             }
@@ -213,9 +228,9 @@ namespace PrimaryInterface1._0.Controls
                 int RemoveIndex = ConstructionHelper.IndexOf(device);
                 for (int i = 0; i < device.InterfaceCount+1; i++)
                 {
-                    cellsState.RemoveAt(RemoveIndex);
+                    ViewModel.cellsState.RemoveAt(RemoveIndex);
                 }
-                foreach (List<CellState> RowList in cellsState)
+                foreach (List<CellState> RowList in ViewModel.cellsState)
                 {
                     for (int i = 0; i < device.InterfaceCount+1; i++)
                     {
@@ -228,7 +243,7 @@ namespace PrimaryInterface1._0.Controls
                     RowCreateHelper.RemoveAt(RemoveIndex);
                 }
                 InnerDeviceList.Remove((DeviceModel)item);
-                foreach (List<CellState> RowList in cellsState)
+                foreach (List<CellState> RowList in ViewModel.cellsState)
                 {
                     foreach (var e in RowList)
                     {
@@ -244,9 +259,12 @@ namespace PrimaryInterface1._0.Controls
         private List<List<CellState>> cellsState = new List<List<CellState>>();
         public List<List<CellState>> CellState
         {
-            get { return cellsState; }
+            get { return ViewModel.cellsState; }
         }
     }
+
+
+
 
 
     public class ItemsGrid : ItemsControl

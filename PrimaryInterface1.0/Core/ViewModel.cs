@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PrimaryInterface1._0.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace PrimaryInterface1._0.Core
 {
-    class ViewModel
+    public class ViewModel
     {
-
+        public static List<List<CellState>> cellsState = new List<List<CellState>>();
     }
 }

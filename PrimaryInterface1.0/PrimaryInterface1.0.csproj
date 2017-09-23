@@ -67,7 +67,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controls\CellBase.cs" />
+    <Compile Include="Controls\CellFactory.cs" />
     <Compile Include="Controls\CommonDependencyPropertyAttribute.cs" />
+    <Compile Include="Controls\InterfaceGrid_0.1.cs" />
     <Compile Include="Controls\InterfaceGrid.cs" />
     <Compile Include="Core\ViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
