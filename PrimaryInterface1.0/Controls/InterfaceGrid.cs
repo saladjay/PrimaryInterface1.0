@@ -148,8 +148,18 @@ namespace PrimaryInterface1._0.Controls
                             {
                                 CLabel TempCLabel = new CLabel() { IsCommon = false };
                                 TempCLabel.ToolTip = string.Format(TempDev.DeviceName);
-                                Grid.SetColumn(TempCLabel, ConstructionHelper.IndexOf(device.InterfaceList[i - 1]));
+                                int ColumnIndex = ConstructionHelper.IndexOf(device.InterfaceList[i - 1]);
+                                Grid.SetColumn(TempCLabel, ColumnIndex);
                                 Grid.SetRow(TempCLabel, RowIndex);
+
+                                Binding B1 = new Binding("RowState") { Source = cellsState[RowIndex][ColumnIndex] };
+                                Binding B2 = new Binding("Column") { Source = cellsState[RowIndex][ColumnIndex] };
+
+                                MultiBinding MBinding = new MultiBinding() { Mode = BindingMode.OneWay };
+                                MBinding.Bindings.Add(B1);
+                                MBinding.Bindings.Add(B2);
+                                MBinding.Converter = Converter.CellStateConverter;
+                                TempCLabel.SetBinding(CLabel.IsSelectedProperty, MBinding);
                             }
                         }
                         else
@@ -159,15 +169,38 @@ namespace PrimaryInterface1._0.Controls
                             {
                                 CLabel TempCLabel = new CLabel() { IsCommon = false };
                                 TempCLabel.ToolTip = string.Format(device.DeviceName);
-                                Grid.SetColumn(TempCLabel, ConstructionHelper.IndexOf(device));
+                                int ColumnIndex = ConstructionHelper.IndexOf(device);
+
+                                Grid.SetColumn(TempCLabel, ColumnIndex);
                                 Grid.SetRow(TempCLabel, RowIndex);
+
+                                Binding B1 = new Binding("RowState") { Source = cellsState[RowIndex][ColumnIndex] };
+                                Binding B2 = new Binding("Column") { Source = cellsState[RowIndex][ColumnIndex] };
+
+                                MultiBinding MBinding = new MultiBinding() { Mode = BindingMode.OneWay };
+                                MBinding.Bindings.Add(B1);
+                                MBinding.Bindings.Add(B2);
+                                MBinding.Converter = Converter.CellStateConverter;
+
+                                TempCLabel.SetBinding(CToggleBtn.ChangedIconProperty, MBinding);
+
                             }
                             else
                             {
                                 CLabel TempCLabel = new CLabel() { IsCommon=true };
                                 TempCLabel.ToolTip = string.Format(TempInterface.InterfaceName + "=>" + device.InterfaceList[i - 1].InterfaceName);
-                                Grid.SetColumn(TempCLabel, ConstructionHelper.IndexOf(device.InterfaceList[i - 1]));
+                                int ColumnIndex = ConstructionHelper.IndexOf(device.InterfaceList[i - 1]);
+                                Grid.SetColumn(TempCLabel, ColumnIndex);
                                 Grid.SetRow(TempCLabel, RowIndex);
+                                Binding B1 = new Binding("RowState") { Source = cellsState[RowIndex][ColumnIndex] };
+                                Binding B2 = new Binding("Column") { Source = cellsState[RowIndex][ColumnIndex] };
+
+                                MultiBinding MBinding = new MultiBinding() { Mode = BindingMode.OneWay };
+                                MBinding.Bindings.Add(B1);
+                                MBinding.Bindings.Add(B2);
+                                MBinding.Converter = Converter.CellStateConverter;
+                                TempCLabel.SetBinding(CLabel.IsSelectedProperty, MBinding);
+
                             }
                         }
                     }
