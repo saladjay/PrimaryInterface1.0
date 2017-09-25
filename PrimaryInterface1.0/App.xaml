@@ -7,6 +7,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Style\CellStyle.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Style\DeviceTreeView.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Style\DeviceConnectView.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

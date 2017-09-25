@@ -66,9 +66,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\AttachedPropertyScroller.cs" />
     <Compile Include="Controls\CellBase.cs" />
     <Compile Include="Controls\CellFactory.cs" />
     <Compile Include="Controls\CommonDependencyPropertyAttribute.cs" />
+    <Compile Include="Controls\DeviceConnectView.cs" />
+    <Compile Include="Controls\DeviceTreeView.cs" />
     <Compile Include="Controls\InterfaceGrid_0.1.cs" />
     <Compile Include="Controls\InterfaceGrid.cs" />
     <Compile Include="Core\ViewModel.cs" />
@@ -77,6 +80,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Style\CellStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Style\DeviceConnectView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Style\DeviceTreeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

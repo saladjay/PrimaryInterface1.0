@@ -108,6 +108,7 @@ namespace PrimaryInterface1._0.Controls
 
         protected override void OnMouseEnter(MouseEventArgs e)
         {
+            Debug.WriteLine("visibility is " + this.Visibility);
             Debug.WriteLine("source" + PositionRow + " " + PositionColumn);
             Debug.WriteLine("source2" + Grid.GetRow(this) + " " + Grid.GetColumn(this));
             IsMouseSelect?.Invoke(true, this);

@@ -133,14 +133,14 @@ namespace PrimaryInterface1._0.Controls
                         {
                             int ColumnIndex = ConstructionHelper.IndexOf(device.InterfaceList[i - 1]);
                             Control CellControl = CellFactory.CreateCell(TempDev, device.InterfaceList[i - 1], RowIndex, ColumnIndex);
+                            Debug.WriteLine(((CLabel)CellControl).ToolTip.ToString() + " " + CellControl.Visibility);
                             this.Children.Add(CellControl);
                             RowList.Add(CellControl);
                             Grid.SetColumn(CellControl, this.ColumnDefinitions.Count + i - device.InterfaceCount - 1);
                             Grid.SetRow(CellControl, PositionHelper[RowIndex]);
                         }
                     }
-                }
-            
+                }            
                 for (int i = 0; i < device.InterfaceCount + 1; i++)
                 {
                     List<Control> tempRow = new List<Control>();
@@ -162,6 +162,7 @@ namespace PrimaryInterface1._0.Controls
                             Control CellControl = CellFactory.CreateCell(device.InterfaceList[i - 1], ConstructionHelper[ColumnIndex], CellsControl.Count, ColumnIndex);
                             tempRow.Add(CellControl);
                             this.Children.Add(CellControl);
+                            Debug.WriteLine(((CLabel)CellControl).ToolTip.ToString() + " " + CellControl.Visibility);
                             Grid.SetColumn(CellControl, PositionHelper[ColumnIndex]);
                             Grid.SetRow(CellControl, RowDefinitions.Count - device.InterfaceCount - 1 + i);
                         }
@@ -171,13 +172,13 @@ namespace PrimaryInterface1._0.Controls
                 Debug.WriteLine("CellsState measure " + ViewModel.cellsState.Count + " " + ViewModel.cellsState.First().Count);
                 Debug.WriteLine("CellsControl measure " + CellsControl.Count + " " + CellsControl.First().Count);
                 Debug.WriteLine("grid children count " + this.Children.Count);
-                int r = 0;
-                foreach (Control cell in this.Children)
-                {
-                    cell.Visibility = Visibility.Visible;
-                    if (cell is CToggleBtn)
-                        Debug.Write("one ctoggleBtn"+(++r));
-                }
+                //int r = 0;
+                //foreach (Control cell in this.Children)
+                //{
+                //    cell.Visibility = Visibility.Visible;
+                //    if (cell is CToggleBtn)
+                //        Debug.Write("one ctoggleBtn"+(++r));
+                //}
             }
             else
             {
@@ -222,13 +223,13 @@ namespace PrimaryInterface1._0.Controls
                 Debug.WriteLine("CellsState measure " + ViewModel.cellsState.Count + " " + ViewModel.cellsState.First().Count);
                 Debug.WriteLine("CellsControl measure " + CellsControl.Count + " " + CellsControl.First().Count);
                 Debug.WriteLine("grid children count " + this.Children.Count);
-                int r = 0;
-                foreach (Control cell in this.Children)
-                {
-                    cell.Visibility = Visibility.Visible;
-                    if (cell is CToggleBtn)
-                        Debug.Write("one ctoggleBtn" + (++r));
-                }
+                //int r = 0;
+                //foreach (Control cell in this.Children)
+                //{
+                //    cell.Visibility = Visibility.Visible;
+                //    if (cell is CToggleBtn)
+                //        Debug.Write("one ctoggleBtn" + (++r));
+                //}
             }
         }
         private List<List<Control>> CellsControl = new List<List<Control>>();

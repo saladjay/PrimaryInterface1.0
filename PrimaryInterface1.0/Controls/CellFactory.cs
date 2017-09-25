@@ -62,6 +62,7 @@ namespace PrimaryInterface1._0.Controls
             {
                 MBinding.Converter = Converter.CellVisibilityConverter;
                 Good.SetBinding(CLabel.VisibilityProperty, MBinding);
+                //Good.Visibility = Visibility.Collapsed;
             }
             return (Control)Good;
         }

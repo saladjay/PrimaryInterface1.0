@@ -26,7 +26,8 @@ namespace PrimaryInterface1._0
         public MainWindow()
         {
             InitializeComponent();
-            interfacegrid.ItemsSource = collection;
+            //interfacegrid.ItemsSource = collection;
+            ConnectView.ItemsSource = collection;
 
         }
 
