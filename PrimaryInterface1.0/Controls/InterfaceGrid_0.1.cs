@@ -1,4 +1,5 @@
 ﻿using MS.Internal.PresentationFramework;
+using PrimaryInterface1._0.Core;
 using PrimaryInterface1._0.Model;
 using System;
 using System.Collections;
@@ -68,6 +69,7 @@ namespace PrimaryInterface1._0.Controls
         #region Construction
         public InterfaceGrid_01()
         {
+            //this.Children.Add(new Border() { HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch ,BorderBrush= new SolidColorBrush(Color.FromRgb(0,0,0))});
             CGridItemsSource.ExtendedItemsChanged += CGridItemsSource_ExtendedItemsChanged;
         }
         #endregion
@@ -75,20 +77,23 @@ namespace PrimaryInterface1._0.Controls
 
         private List<object> ConstructionHelper = new List<object>();
         private List<CellState> RowCreateHelper = new List<Model.CellState>();
+        private List<int> PositionHelper = new List<int>();
+        private int PositionHelperIndex = 0;
+        //private int CellsColumnIndex = 0;
         private void CGridItemsSource_ExtendedItemsChanged(object item, bool AddOrRemove)
         {
             if (!(item is DeviceModel))
                 return;
+            DeviceModel device = item as DeviceModel;
             if (AddOrRemove)
             {
-                DeviceModel device = item as DeviceModel;
                 InnerDeviceList.Add(device);
                 ConstructionHelper.Add(device);
                 foreach (DeviceInterface element in device.InterfaceList)
                 {
                     ConstructionHelper.Add(element);
                 }
-                foreach (List<CellState> RowList in cellsState)
+                foreach (List<CellState> RowList in ViewModel.cellsState)
                 {
                     for (int i = 0; i < device.InterfaceCount + 1; i++)
                     {
@@ -98,26 +103,17 @@ namespace PrimaryInterface1._0.Controls
                 for (int i = 0; i < device.InterfaceCount + 1; i++)
                 {
                     RowCreateHelper.Add(new Model.CellState() { RowState = false, ColumnState = false });
+                    PositionHelper.Add(PositionHelperIndex++);
                 }
                 for (int i = 0; i < device.InterfaceCount + 1; i++)
                 {
-                    cellsState.Add(new List<Model.CellState>(RowCreateHelper));
+                    ViewModel.cellsState.Add(new List<Model.CellState>(RowCreateHelper));
                 }
-                foreach (List<CellState> RowList in cellsState)
-                {
-                    foreach (var e in RowList)
-                    {
-                        Debug.Write("1--");
-                    }
-                    Debug.Write("\n");
-                }
-
                 for (int i = 0; i < device.InterfaceCount + 1; i++)
                 {
-                    this.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(0, GridUnitType.Auto) });
-                    this.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0, GridUnitType.Auto) });
+                    this.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(20, GridUnitType.Auto) });
+                    this.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(20, GridUnitType.Auto) });
                 }
-
                 foreach (List<Control> RowList in CellsControl)
                 {
                     int RowIndex = CellsControl.IndexOf(RowList);
@@ -130,8 +126,8 @@ namespace PrimaryInterface1._0.Controls
                             Control CellControl = CellFactory.CreateCell(TempDev, device, RowIndex, ColumnIndex);
                             this.Children.Add(CellControl);
                             RowList.Add(CellControl);
-                            Grid.SetColumn(CellControl, ColumnIndex);
-                            Grid.SetRow(CellControl, RowIndex);
+                            Grid.SetColumn(CellControl, this.ColumnDefinitions.Count + i - device.InterfaceCount - 1);
+                            Grid.SetRow(CellControl, PositionHelper[RowIndex]);
                         }
                         else
                         {
@@ -139,8 +135,8 @@ namespace PrimaryInterface1._0.Controls
                             Control CellControl = CellFactory.CreateCell(TempDev, device.InterfaceList[i - 1], RowIndex, ColumnIndex);
                             this.Children.Add(CellControl);
                             RowList.Add(CellControl);
-                            Grid.SetColumn(CellControl, ColumnIndex);
-                            Grid.SetRow(CellControl, RowIndex);
+                            Grid.SetColumn(CellControl, this.ColumnDefinitions.Count + i - device.InterfaceCount - 1);
+                            Grid.SetRow(CellControl, PositionHelper[RowIndex]);
                         }
                     }
                 }
@@ -152,36 +148,46 @@ namespace PrimaryInterface1._0.Controls
                     {
                         for (int ColumnIndex = 0; ColumnIndex < ConstructionHelper.Count; ColumnIndex++)
                         {
-                            Control CellControl = CellFactory.CreateCell(device, ConstructionHelper[i], CellsControl.Count, ColumnIndex);
+                            Control CellControl = CellFactory.CreateCell(device, ConstructionHelper[ColumnIndex], CellsControl.Count, ColumnIndex);
                             tempRow.Add(CellControl);
                             this.Children.Add(CellControl);
-                            Grid.SetColumn(CellControl, ColumnIndex);
-                            Grid.SetRow(CellControl, CellsControl.Count);
+                            Grid.SetColumn(CellControl, PositionHelper[ColumnIndex]);
+                            Grid.SetRow(CellControl, RowDefinitions.Count - device.InterfaceCount - 1 + i);
                         }
                     }
                     else
                     {
                         for (int ColumnIndex = 0; ColumnIndex < ConstructionHelper.Count; ColumnIndex++)
                         {
-                            Control CellControl = CellFactory.CreateCell(device.InterfaceList[i - 1], ConstructionHelper[i], CellsControl.Count, ColumnIndex);
+                            Control CellControl = CellFactory.CreateCell(device.InterfaceList[i - 1], ConstructionHelper[ColumnIndex], CellsControl.Count, ColumnIndex);
                             tempRow.Add(CellControl);
                             this.Children.Add(CellControl);
-                            Grid.SetColumn(CellControl, ColumnIndex);
-                            Grid.SetRow(CellControl, CellsControl.Count);
+                            Grid.SetColumn(CellControl, PositionHelper[ColumnIndex]);
+                            Grid.SetRow(CellControl, RowDefinitions.Count - device.InterfaceCount - 1 + i);
                         }
                     }
+                    CellsControl.Add(tempRow);
+                }
+                Debug.WriteLine("CellsState measure " + ViewModel.cellsState.Count + " " + ViewModel.cellsState.First().Count);
+                Debug.WriteLine("CellsControl measure " + CellsControl.Count + " " + CellsControl.First().Count);
+                Debug.WriteLine("grid children count " + this.Children.Count);
+                int r = 0;
+                foreach (Control cell in this.Children)
+                {
+                    cell.Visibility = Visibility.Visible;
+                    if (cell is CToggleBtn)
+                        Debug.Write("one ctoggleBtn"+(++r));
                 }
             }
             else
             {
-                DeviceModel device = item as DeviceModel;
                 int Index = InnerDeviceList.IndexOf(device);
                 int RemoveIndex = ConstructionHelper.IndexOf(device);
                 for (int i = 0; i < device.InterfaceCount+1; i++)
                 {
-                    cellsState.RemoveAt(RemoveIndex);
+                    ViewModel.cellsState.RemoveAt(RemoveIndex);
                 }
-                foreach (List<CellState> RowList in cellsState)
+                foreach (List<CellState> RowList in ViewModel.cellsState)
                 {
                     for (int i = 0; i < device.InterfaceCount+1; i++)
                     {
@@ -192,15 +198,36 @@ namespace PrimaryInterface1._0.Controls
                 {
                     ConstructionHelper.RemoveAt(RemoveIndex);
                     RowCreateHelper.RemoveAt(RemoveIndex);
+                    PositionHelper.RemoveAt(RemoveIndex);
                 }
                 InnerDeviceList.Remove((DeviceModel)item);
-                foreach (List<CellState> RowList in cellsState)
+                for (int i = 0; i < device.InterfaceCount+1; i++)
                 {
-                    foreach (var e in RowList)
+                    foreach (Control Cell in CellsControl[RemoveIndex])
                     {
-                        Debug.Write("1--");
+                        this.Children.Remove(Cell);
                     }
-                    Debug.Write("\n");
+                    CellsControl.RemoveAt(RemoveIndex);
+                }
+                foreach (List<Control> rowlist in CellsControl)
+                {
+                    for (int i = 0; i < device.InterfaceCount+1; i++)
+                    {
+                        this.Children.Remove(rowlist[RemoveIndex]);
+                        rowlist.RemoveAt(RemoveIndex);
+                    }
+                }
+                if (ViewModel.cellsState.Count == 0)
+                    return;
+                Debug.WriteLine("CellsState measure " + ViewModel.cellsState.Count + " " + ViewModel.cellsState.First().Count);
+                Debug.WriteLine("CellsControl measure " + CellsControl.Count + " " + CellsControl.First().Count);
+                Debug.WriteLine("grid children count " + this.Children.Count);
+                int r = 0;
+                foreach (Control cell in this.Children)
+                {
+                    cell.Visibility = Visibility.Visible;
+                    if (cell is CToggleBtn)
+                        Debug.Write("one ctoggleBtn" + (++r));
                 }
             }
         }

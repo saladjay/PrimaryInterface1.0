@@ -2,6 +2,7 @@
 using PrimaryInterface1._0.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,18 +47,22 @@ namespace PrimaryInterface1._0.Controls
             }
             if (Good == null)
                 return Good;
-            //int ColumnIndex = ConstructionHelper.IndexOf(device);
-            //Grid.SetColumn(TempBtn, ColumnIndex);
-            //Grid.SetRow(TempBtn, RowIndex);
             Binding B1 = new Binding("RowState") { Source = ViewModel.cellsState[Row][Column] };
-            Binding B2 = new Binding("Column") { Source = ViewModel.cellsState[Row][Column] };
+            Binding B2 = new Binding("ColumnState") { Source = ViewModel.cellsState[Row][Column] };
 
             MultiBinding MBinding = new MultiBinding() { Mode = BindingMode.OneWay };
             MBinding.Bindings.Add(B1);
             MBinding.Bindings.Add(B2);
-            MBinding.Converter = Converter.CellStateConverter;
-
-            Good.SetBinding(CToggleBtn.ChangedIconProperty, MBinding);
+            if (Good is CToggleBtn)
+            {
+                MBinding.Converter = Converter.CellStateConverter;
+                Good.SetBinding(CToggleBtn.ChangedIconProperty, MBinding);
+            }
+            else
+            {
+                MBinding.Converter = Converter.CellVisibilityConverter;
+                Good.SetBinding(CLabel.VisibilityProperty, MBinding);
+            }
             return (Control)Good;
         }
     }

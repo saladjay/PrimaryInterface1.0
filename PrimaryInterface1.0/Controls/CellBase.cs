@@ -114,6 +114,8 @@ namespace PrimaryInterface1._0.Controls
             base.OnMouseEnter(e);
         }
 
+        
+
         protected override void OnMouseLeave(MouseEventArgs e)
         {
             IsMouseSelect?.Invoke(false, this);

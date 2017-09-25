@@ -32,12 +32,19 @@ namespace PrimaryInterface1._0
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            collection.Add(new DeviceModel("123", 4));
+            collection.Add(new DeviceModel("first", 4));          
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
-            collection?.RemoveAt(0);
+            collection?.RemoveAt(2);
+        }
+
+        private void button2_Click(object sender, RoutedEventArgs e)
+        {
+            collection.Add(new DeviceModel("second", 4));
+            collection.Add(new DeviceModel("third", 4));
+            collection.Add(new DeviceModel("fourth", 4));
         }
     }
 }

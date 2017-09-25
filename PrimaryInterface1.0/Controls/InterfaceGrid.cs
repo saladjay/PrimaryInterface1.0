@@ -288,14 +288,17 @@ namespace PrimaryInterface1._0.Controls
             {
                 foreach (var item in e.NewItems)
                 {
-                    Debug.WriteLine("PleaseFindThis " + item + (ExtendedItemsChanged == null));
+                    Debug.WriteLine("Please Find This " + item + " true");
                     ExtendedItemsChanged?.Invoke(item, true);
                 }
             }
             if (e.OldItems != null)
             {
+                //if (Items.Count == 0)
+                //    return;
                 foreach (var item in e.OldItems)
                 {
+                    Debug.WriteLine("Please Find This " + item + " false");
                     ExtendedItemsChanged?.Invoke(item, false);
                 }
             }
