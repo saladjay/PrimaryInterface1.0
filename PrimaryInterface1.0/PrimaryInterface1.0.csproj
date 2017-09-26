@@ -72,6 +72,7 @@
     <Compile Include="Controls\CommonDependencyPropertyAttribute.cs" />
     <Compile Include="Controls\DeviceConnectView.cs" />
     <Compile Include="Controls\DeviceList.cs" />
+    <Compile Include="Controls\DeviceListViewGrid.cs" />
     <Compile Include="Controls\DeviceTreeView.cs" />
     <Compile Include="Controls\InterfaceGrid_0.1.cs" />
     <Compile Include="Controls\InterfaceGrid.cs" />

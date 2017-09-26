@@ -1,4 +1,5 @@
-﻿using PrimaryInterface1._0.Model;
+﻿using PrimaryInterface1._0.Core;
+using PrimaryInterface1._0.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,29 +24,30 @@ namespace PrimaryInterface1._0
     public partial class MainWindow : Window
     {
         ObservableCollection<DeviceModel> collection = new ObservableCollection<DeviceModel>();
+        ViewModel SourceData = new ViewModel();
         public MainWindow()
         {
             InitializeComponent();
             //interfacegrid.ItemsSource = collection;
-            ConnectView.ItemsSource = collection;
+            ConnectView.ItemsSource = SourceData.DataCollection;
 
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            collection.Add(new DeviceModel("first", 4));          
+            SourceData.DataCollection.Add(new DeviceModel("first", 4));          
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
-            collection?.RemoveAt(2);
+            SourceData.DataCollection.RemoveAt(2);
         }
 
         private void button2_Click(object sender, RoutedEventArgs e)
         {
-            collection.Add(new DeviceModel("second", 4));
-            collection.Add(new DeviceModel("third", 4));
-            collection.Add(new DeviceModel("fourth", 4));
+            SourceData.DataCollection.Add(new DeviceModel("second", 4));
+            SourceData.DataCollection.Add(new DeviceModel("third", 4));
+            SourceData.DataCollection.Add(new DeviceModel("fourth", 4));
         }
     }
 }

@@ -118,10 +118,7 @@ namespace PrimaryInterface1._0.Controls
                     RowCreateHelper.Add(new Model.CellState() { RowState = false, ColumnState = false });
                     PositionHelper.Add(PositionHelperIndex++);
                 }
-                //for (int i = 0; i < device.InterfaceCount + 1; i++)
-                //{
-                //    ViewModel.cellsState.Add(new List<Model.CellState>(RowCreateHelper));
-                //}
+
                 for (int i = 0; i < device.InterfaceCount + 1; i++)
                 {
                     this.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(20, GridUnitType.Auto) });
@@ -224,22 +221,11 @@ namespace PrimaryInterface1._0.Controls
                 Debug.WriteLine("CellsState measure " + _RowCellState.Count + " " + _ColumnCellState.Count);
                 Debug.WriteLine("CellsControl measure " + CellsControl.Count + " " + CellsControl.First().Count);
                 Debug.WriteLine("grid children count " + this.Children.Count);
-                //int r = 0;
-                //foreach (Control cell in this.Children)
-                //{
-                //    cell.Visibility = Visibility.Visible;
-                //    if (cell is CToggleBtn)
-                //        Debug.Write("one ctoggleBtn" + (++r));
-                //}
             }
         }
         private List<List<Control>> CellsControl = new List<List<Control>>();
 
-        private List<List<CellState>> cellsState = new List<List<CellState>>();
-        public List<List<CellState>> CellState
-        {
-            get { return cellsState; }
-        }
+
 
         public class CellFactory
         {

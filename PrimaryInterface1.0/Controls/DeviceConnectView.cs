@@ -70,23 +70,12 @@ namespace PrimaryInterface1._0.Controls
             this.SetValue(LeftItemPropertyKey, LeftTreeView);
             this.SetValue(TopItemPropertyKey, TopTreeView);
             this.SetValue(ButtomItemPropertyKey, InterfaceState);
-            //LeftTreeView.ItemsSource = LeftModelList;
-            //TopTreeView.ItemsSource = TopModelList;
+
             InterfaceState.ItemsSource = InterfaceList;
             LeftTreeView.ItemsSelectedChanged += LeftTreeView_ItemsSelectedChanged;
             TopTreeView.ItemsSelectedChanged += TopTreeView_ItemsSelectedChanged;
             LeftTreeView.ItemsStateChanged += LeftTreeView_ItemsStateChanged;
             TopTreeView.ItemsStateChanged += TopTreeView_ItemsStateChanged;
-            //InterfaceState.SetBinding(CGrid.PrimaryColumnProperty, new Binding("FirstLevelItemsCount") { Source = TopTreeView });
-            //InterfaceState.SetBinding(CGrid.PrimaryRowProperty, new Binding("FirstLevelItemsCount") { Source = LeftTreeView });
-            //InterfaceState.SetBinding(CGrid.NewColumnProperty, new Binding("AddNewRanks") { Source = TopTreeView });
-            //InterfaceState.SetBinding(CGrid.NewRowProperty, new Binding("AddNewRanks") { Source = LeftTreeView });
-            //InterfaceState.SetBinding(CGrid.ColumnItemsStateProperty, new Binding("ItemsState") { Source = TopTreeView });
-            //InterfaceState.SetBinding(CGrid.RowItemsStateProperty, new Binding("ItemsState") { Source = LeftTreeView });
-            //LeftTreeView.SetBinding(CTreeView.ExpandedIndexProperty, new Binding("ExpandedRow") { Source = InterfaceState });
-            //TopTreeView.SetBinding(CTreeView.ExpandedIndexProperty, new Binding("ExpandedColumn") { Source = InterfaceState });
-            //InterfaceState.SetBinding(CGrid.SelectedColumnProperty, new Binding("SelectRowIndex") { Source = TopTreeView, Mode = BindingMode.TwoWay });
-            //InterfaceState.SetBinding(CGrid.SelectedRowProperty, new Binding("SelectRowIndex") { Source = LeftTreeView, Mode = BindingMode.TwoWay });
         }
 
         private void TopTreeView_ItemsStateChanged(ItemInfo Source)

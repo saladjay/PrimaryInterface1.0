@@ -126,4 +126,124 @@
         </Style.Triggers>
     </Style>
 
+    <ControlTemplate x:Key="CTreeViewItemTemplate3" TargetType="Custom:CTreeViewItem">
+        <Grid Name="grid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <ToggleButton Name="Expander" Grid.Column="0" IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press" Width="20" Height="20" Style="{StaticResource ToggleBtnStyle}"></ToggleButton>
+                <Border Grid.Column="1" HorizontalAlignment="Stretch" BorderThickness="{TemplateBinding Border.BorderThickness}" Padding="{TemplateBinding Control.Padding}" BorderBrush="{TemplateBinding Border.BorderBrush}" Background="{TemplateBinding Panel.Background}" Name="Bd" SnapsToDevicePixels="True">
+                    <TextBlock Text="{TemplateBinding HeaderedContentControl.Header}" Name="PART_Header" TextAlignment="Left" HorizontalAlignment="Stretch" SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" ></TextBlock>
+                </Border>
+                <CheckBox Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Width="20" Height="20"></CheckBox>
+                <Rectangle Grid.ColumnSpan="3" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="Rt" IsHitTestVisible="False"></Rectangle>
+            </Grid>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="ItemsControl.HasItems" Value="False">
+                <Setter Property="UIElement.Visibility" TargetName="Expander" Value="Hidden"></Setter>
+            </Trigger>
+            <Trigger Property="MouseSelected" Value="True">
+                <Setter Property="Stroke" TargetName="Rt" Value="#000000"></Setter>
+            </Trigger>
+            <Trigger Property="TreeViewItem.IsSelected" Value="True">
+                <Setter Property="Panel.Background" TargetName="Bd">
+                    <Setter.Value>
+                        <DynamicResource ResourceKey="{x:Static SystemColors.HighlightBrushKey}" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="UIElement.IsEnabled" Value="False">
+                <Setter Property="TextElement.Foreground">
+                    <Setter.Value>
+                        <DynamicResource ResourceKey="{x:Static SystemColors.GrayTextBrushKey}" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="TreeViewItem.IsSelected" Value="True"></Condition>
+                    <Condition Property="Selector.IsSelectionActive" Value="False"></Condition>
+                </MultiTrigger.Conditions>
+                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}}"/>
+            </MultiTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="CTreeViewItemTemplate4" TargetType="Custom:CTreeViewItem">
+        <Grid Name="grid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                    <ColumnDefinition Name="HighLightRow"></ColumnDefinition>
+                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <ToggleButton Name="Expander" Grid.Column="0" IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press" Width="20" Height="20" Style="{StaticResource ToggleBtnStyle}"></ToggleButton>
+                <Border Grid.Column="1" HorizontalAlignment="Stretch" BorderThickness="{TemplateBinding Border.BorderThickness}" Padding="{TemplateBinding Control.Padding}" BorderBrush="{TemplateBinding Border.BorderBrush}" Background="{TemplateBinding Panel.Background}" Name="Bd" SnapsToDevicePixels="True">
+                    <Border.LayoutTransform>
+                        <ScaleTransform ScaleX="-1"></ScaleTransform>
+                    </Border.LayoutTransform>
+                    <TextBlock Text="{TemplateBinding HeaderedContentControl.Header}" Name="PART_Header" TextAlignment="Right" HorizontalAlignment="Stretch" SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" >
+                    </TextBlock>
+                </Border>
+                <CheckBox Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Width="20" Height="20"></CheckBox>
+                <Rectangle Grid.ColumnSpan="3" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="Rt" IsHitTestVisible="False"></Rectangle>
+            </Grid>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="ItemsControl.HasItems" Value="False">
+                <Setter Property="UIElement.Visibility" TargetName="Expander" Value="Hidden"></Setter>
+            </Trigger>
+            <Trigger Property="MouseSelected" Value="True">
+                <Setter Property="Stroke" TargetName="Rt" Value="#000000"></Setter>
+                <!--<Setter Property="IsSelected" Value="True"></Setter>-->
+            </Trigger>
+            <Trigger Property="TreeViewItem.IsSelected" Value="True">
+                <Setter Property="Panel.Background" TargetName="Bd">
+                    <Setter.Value>
+                        <DynamicResource ResourceKey="{x:Static SystemColors.HighlightBrushKey}" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="UIElement.IsEnabled" Value="False">
+                <Setter Property="TextElement.Foreground">
+                    <Setter.Value>
+                        <DynamicResource ResourceKey="{x:Static SystemColors.GrayTextBrushKey}" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="TreeViewItem.IsSelected" Value="True"></Condition>
+                    <Condition Property="Selector.IsSelectionActive" Value="False"></Condition>
+                </MultiTrigger.Conditions>
+                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}}"/>
+            </MultiTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="CTreeViewItemStyle2" TargetType="Custom:CTreeViewItem">
+        <Setter Property="Direction" Value="{Binding RelativeSource={RelativeSource AncestorType=Custom:CTreeView},Path=Direction}"></Setter>
+        <Style.Triggers>
+            <Trigger Property="Direction" Value="Top">
+                <Setter Property="Template" Value="{StaticResource CTreeViewItemTemplate4}"></Setter>
+            </Trigger>
+            <Trigger Property="Direction" Value="Left">
+                <Setter Property="Template" Value="{StaticResource CTreeViewItemTemplate3}"></Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>
