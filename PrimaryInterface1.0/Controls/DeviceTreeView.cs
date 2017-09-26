@@ -74,7 +74,7 @@ namespace PrimaryInterface1._0.Controls
                         SelfIndex++;
                     if (Element.Equals(this))
                         break;
-                }
+                }   
                 TotalIndex = SelfIndex;
             }
             foreach (var item in LogicalTreeHelper.GetChildren(this))
