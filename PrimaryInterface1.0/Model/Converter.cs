@@ -17,9 +17,17 @@ namespace PrimaryInterface1._0.Model
         {
             get { return SingleTon<StateConverter>.GetInstance(); }
         }
-        public static VisibilityConverter CellVisibilityConverter
+        public static VisibilityConverterForCommon CellVisibilityConverter
         {
-            get { return SingleTon<VisibilityConverter>.GetInstance(); }
+            get { return SingleTon<VisibilityConverterForCommon>.GetInstance(); }
+        }
+        public static VisibilityConverterForSingle CellVisibilityConverter2
+        {
+            get { return SingleTon<VisibilityConverterForSingle>.GetInstance(); }
+        }
+        public static SelectedConverterForCLabel SelectConverter
+        {
+            get { return SingleTon<SelectedConverterForCLabel>.GetInstance(); }
         }
     }
 
@@ -37,7 +45,20 @@ namespace PrimaryInterface1._0.Model
         }
     }
 
-    public sealed class VisibilityConverter : IMultiValueConverter
+    public sealed class VisibilityConverterForSingle : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (bool)value ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public sealed class VisibilityConverterForCommon : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -52,6 +73,19 @@ namespace PrimaryInterface1._0.Model
                 Debug.WriteLine("VisibilityConverter return collapsed");
                 return Visibility.Collapsed;
             }
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public sealed class SelectedConverterForCLabel : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (bool)values[0] || (bool)values[1];
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

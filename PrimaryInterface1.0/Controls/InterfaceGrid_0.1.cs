@@ -75,6 +75,19 @@ namespace PrimaryInterface1._0.Controls
         #endregion
 
 
+        private List<CellState> _ColumnCellState = new List<Model.CellState>();//top
+        private List<CellState> _RowCellState = new List<Model.CellState>();//left
+        public List<CellState> ColumnCellState
+        {
+            get { return _ColumnCellState; }
+        }
+
+        public List<CellState> RowCellState
+        {
+            get { return _RowCellState; }
+        }
+
+
         private List<object> ConstructionHelper = new List<object>();
         private List<CellState> RowCreateHelper = new List<Model.CellState>();
         private List<int> PositionHelper = new List<int>();
@@ -93,22 +106,22 @@ namespace PrimaryInterface1._0.Controls
                 {
                     ConstructionHelper.Add(element);
                 }
-                foreach (List<CellState> RowList in ViewModel.cellsState)
+
+                for (int i = 0; i < device.InterfaceCount + 1; i++)
                 {
-                    for (int i = 0; i < device.InterfaceCount + 1; i++)
-                    {
-                        RowList.Add(new Model.CellState() { RowState = false, ColumnState = false });
-                    }
+                    _ColumnCellState.Add(new Model.CellState() { RowState = false, ColumnState = false });
+                    _RowCellState.Add(new Model.CellState() { RowState = false, ColumnState = false });
                 }
+
                 for (int i = 0; i < device.InterfaceCount + 1; i++)
                 {
                     RowCreateHelper.Add(new Model.CellState() { RowState = false, ColumnState = false });
                     PositionHelper.Add(PositionHelperIndex++);
                 }
-                for (int i = 0; i < device.InterfaceCount + 1; i++)
-                {
-                    ViewModel.cellsState.Add(new List<Model.CellState>(RowCreateHelper));
-                }
+                //for (int i = 0; i < device.InterfaceCount + 1; i++)
+                //{
+                //    ViewModel.cellsState.Add(new List<Model.CellState>(RowCreateHelper));
+                //}
                 for (int i = 0; i < device.InterfaceCount + 1; i++)
                 {
                     this.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(20, GridUnitType.Auto) });
@@ -123,7 +136,7 @@ namespace PrimaryInterface1._0.Controls
                         if (i == 0)
                         {
                             int ColumnIndex = ConstructionHelper.IndexOf(device);
-                            Control CellControl = CellFactory.CreateCell(TempDev, device, RowIndex, ColumnIndex);
+                            Control CellControl = CellFactory.CreateCell(TempDev, device, RowIndex, ColumnIndex,this);
                             this.Children.Add(CellControl);
                             RowList.Add(CellControl);
                             Grid.SetColumn(CellControl, this.ColumnDefinitions.Count + i - device.InterfaceCount - 1);
@@ -132,7 +145,7 @@ namespace PrimaryInterface1._0.Controls
                         else
                         {
                             int ColumnIndex = ConstructionHelper.IndexOf(device.InterfaceList[i - 1]);
-                            Control CellControl = CellFactory.CreateCell(TempDev, device.InterfaceList[i - 1], RowIndex, ColumnIndex);
+                            Control CellControl = CellFactory.CreateCell(TempDev, device.InterfaceList[i - 1], RowIndex, ColumnIndex,this);
                             Debug.WriteLine(((CLabel)CellControl).ToolTip.ToString() + " " + CellControl.Visibility);
                             this.Children.Add(CellControl);
                             RowList.Add(CellControl);
@@ -148,7 +161,7 @@ namespace PrimaryInterface1._0.Controls
                     {
                         for (int ColumnIndex = 0; ColumnIndex < ConstructionHelper.Count; ColumnIndex++)
                         {
-                            Control CellControl = CellFactory.CreateCell(device, ConstructionHelper[ColumnIndex], CellsControl.Count, ColumnIndex);
+                            Control CellControl = CellFactory.CreateCell(device, ConstructionHelper[ColumnIndex], CellsControl.Count, ColumnIndex,this);
                             tempRow.Add(CellControl);
                             this.Children.Add(CellControl);
                             Grid.SetColumn(CellControl, PositionHelper[ColumnIndex]);
@@ -159,7 +172,7 @@ namespace PrimaryInterface1._0.Controls
                     {
                         for (int ColumnIndex = 0; ColumnIndex < ConstructionHelper.Count; ColumnIndex++)
                         {
-                            Control CellControl = CellFactory.CreateCell(device.InterfaceList[i - 1], ConstructionHelper[ColumnIndex], CellsControl.Count, ColumnIndex);
+                            Control CellControl = CellFactory.CreateCell(device.InterfaceList[i - 1], ConstructionHelper[ColumnIndex], CellsControl.Count, ColumnIndex,this);
                             tempRow.Add(CellControl);
                             this.Children.Add(CellControl);
                             Debug.WriteLine(((CLabel)CellControl).ToolTip.ToString() + " " + CellControl.Visibility);
@@ -169,16 +182,9 @@ namespace PrimaryInterface1._0.Controls
                     }
                     CellsControl.Add(tempRow);
                 }
-                Debug.WriteLine("CellsState measure " + ViewModel.cellsState.Count + " " + ViewModel.cellsState.First().Count);
+                Debug.WriteLine("CellsState measure " + _RowCellState.Count + " " + _ColumnCellState.Count);
                 Debug.WriteLine("CellsControl measure " + CellsControl.Count + " " + CellsControl.First().Count);
                 Debug.WriteLine("grid children count " + this.Children.Count);
-                //int r = 0;
-                //foreach (Control cell in this.Children)
-                //{
-                //    cell.Visibility = Visibility.Visible;
-                //    if (cell is CToggleBtn)
-                //        Debug.Write("one ctoggleBtn"+(++r));
-                //}
             }
             else
             {
@@ -186,15 +192,10 @@ namespace PrimaryInterface1._0.Controls
                 int RemoveIndex = ConstructionHelper.IndexOf(device);
                 for (int i = 0; i < device.InterfaceCount+1; i++)
                 {
-                    ViewModel.cellsState.RemoveAt(RemoveIndex);
+                    _ColumnCellState.RemoveAt(RemoveIndex);
+                    _RowCellState.RemoveAt(RemoveIndex);
                 }
-                foreach (List<CellState> RowList in ViewModel.cellsState)
-                {
-                    for (int i = 0; i < device.InterfaceCount+1; i++)
-                    {
-                        RowList.RemoveAt(RemoveIndex);
-                    }
-                }
+
                 for (int i = 0; i < device.InterfaceCount+1; i++)
                 {
                     ConstructionHelper.RemoveAt(RemoveIndex);
@@ -218,9 +219,9 @@ namespace PrimaryInterface1._0.Controls
                         rowlist.RemoveAt(RemoveIndex);
                     }
                 }
-                if (ViewModel.cellsState.Count == 0)
+                if (_ColumnCellState.Count == 0)
                     return;
-                Debug.WriteLine("CellsState measure " + ViewModel.cellsState.Count + " " + ViewModel.cellsState.First().Count);
+                Debug.WriteLine("CellsState measure " + _RowCellState.Count + " " + _ColumnCellState.Count);
                 Debug.WriteLine("CellsControl measure " + CellsControl.Count + " " + CellsControl.First().Count);
                 Debug.WriteLine("grid children count " + this.Children.Count);
                 //int r = 0;
@@ -239,11 +240,103 @@ namespace PrimaryInterface1._0.Controls
         {
             get { return cellsState; }
         }
+
+        public class CellFactory
+        {
+            public static Control CreateCell(object a, object b, int Row, int Column ,InterfaceGrid_01 temp)
+            {
+                Control Good = null;
+                if (a is DeviceModel && b is DeviceModel)
+                {
+                    DeviceModel A = a as DeviceModel;
+                    DeviceModel B = b as DeviceModel;
+                    Good = new CToggleBtn() { };
+                    Good.ToolTip = string.Format(A.DeviceName + "&&" + B.DeviceName);
+                    Binding B1 = new Binding("SingleBool") { Source = temp._RowCellState[Row] };
+                    Binding B2 = new Binding("SingleBool") { Source = temp._ColumnCellState[Column] };
+
+                    MultiBinding MBinding = new MultiBinding() { Mode = BindingMode.OneWay };
+                    MBinding.Bindings.Add(B1);
+                    MBinding.Bindings.Add(B2);
+                    MBinding.Converter = Converter.CellStateConverter;
+                    Good.SetBinding(CToggleBtn.ChangedIconProperty, MBinding);
+                }
+                else if (a is DeviceModel && b is DeviceInterface)
+                {
+                    DeviceModel A = a as DeviceModel;
+                    DeviceInterface B = b as DeviceInterface;
+                    Good = new CLabel() { IsCommon = false };
+                    Good.ToolTip = string.Format(A.DeviceName);
+                    Good.SetBinding(CLabel.VisibilityProperty, new Binding("SingleBool") { Source = temp._ColumnCellState[Column], Converter = Converter.CellVisibilityConverter2 });
+
+                    //Binding SelectBD1 = new Binding("IsSelect") { Source = temp._RowCellState[Row] };
+                    //Binding SelectBD2 = new Binding("IsSelect") { Source = temp._ColumnCellState[Column] };
+                    //MultiBinding SelectMB = new MultiBinding() { Mode = BindingMode.OneWay };
+                    //SelectMB.Bindings.Add(SelectBD1);
+                    //SelectMB.Bindings.Add(SelectBD2);
+                    //SelectMB.Converter = Converter.SelectConverter;
+                    //Good.SetBinding(CLabel.IsSelectedProperty, SelectMB);
+                }
+                else if (a is DeviceInterface && b is DeviceModel)
+                {
+                    DeviceInterface A = a as DeviceInterface;
+                    DeviceModel B = b as DeviceModel;
+                    Good = new CLabel() { IsCommon = false };
+                    Good.ToolTip = string.Format(B.DeviceName);
+                    Good.SetBinding(CLabel.VisibilityProperty, new Binding("SingleBool") { Source = temp._RowCellState[Row], Converter = Converter.CellVisibilityConverter2 });
+
+
+                }
+                else if (a is DeviceInterface && b is DeviceInterface)
+                {
+                    DeviceInterface A = a as DeviceInterface;
+                    DeviceInterface B = b as DeviceInterface;
+                    Good = new CLabel() { IsCommon = true };
+                    Good.ToolTip = string.Format(A.InterfaceName + "=>" + B.InterfaceName);
+
+                    Binding B1 = new Binding("SingleBool") { Source = temp._RowCellState[Row] };
+                    Binding B2 = new Binding("SingleBool") { Source = temp._ColumnCellState[Column] };
+                    MultiBinding MBinding = new MultiBinding() { Mode = BindingMode.OneWay };
+                    MBinding.Bindings.Add(B1);
+                    MBinding.Bindings.Add(B2);
+                    MBinding.Converter = Converter.CellVisibilityConverter;
+                    Good.SetBinding(CLabel.VisibilityProperty, MBinding);
+                }
+                if (Good == null)
+                    return Good;
+
+                    Good.Width = Good.Height = 20;
+                //{
+                //    Binding B1 = new Binding("ColumnState") { Source = temp._RowCellState[Row] };
+                //    Binding B2 = new Binding("ColumnState") { Source = temp._ColumnCellState[Column] };
+
+                //    MultiBinding MBinding = new MultiBinding() { Mode = BindingMode.OneWay };
+                //    MBinding.Bindings.Add(B1);
+                //    MBinding.Bindings.Add(B2);
+                //    if (Good is CToggleBtn)
+                //    {
+                //        MBinding.Converter = Converter.CellStateConverter;
+                //        Good.SetBinding(CToggleBtn.ChangedIconProperty, MBinding);
+                //    }
+                //    else
+                //    {
+                //        MBinding.Converter = Converter.CellVisibilityConverter;
+                //        Good.SetBinding(CLabel.VisibilityProperty, MBinding);
+                //    }
+                //}
+                if(Good is CLabel)
+                {
+                    Binding SelectBD1 = new Binding("IsSelect") { Source = temp._RowCellState[Row] };
+                    Binding SelectBD2 = new Binding("IsSelect") { Source = temp._ColumnCellState[Column] };
+                    MultiBinding SelectMB = new MultiBinding() { Mode = BindingMode.OneWay };
+                    SelectMB.Bindings.Add(SelectBD1);
+                    SelectMB.Bindings.Add(SelectBD2);
+                    SelectMB.Converter = Converter.SelectConverter;
+                    Good.SetBinding(CLabel.IsSelectedProperty, SelectMB);
+                }
+                return (Control)Good;
+            }
+        }
+
     }
-
-
-
-
-
-
 }

@@ -31,6 +31,13 @@ namespace PrimaryInterface1._0.Controls
             get { return (_Direction)GetValue(DirectionProperty); }
             set { SetValue(DirectionProperty, value); }
         }
+
+        public static readonly DependencyProperty OpenProperty = DependencyProperty.Register("Open", typeof(bool), typeof(CTreeViewItem));
+        public bool Open
+        {
+            get { return (bool)GetValue(OpenProperty); }
+            set { SetValue(OpenProperty, value); }
+        }
         #endregion
 
         #region expand and collapse
@@ -47,14 +54,14 @@ namespace PrimaryInterface1._0.Controls
             if (ExpandedRowIndex == null)
                 Debug.WriteLine("ExpandedRowIndex event is not subscribed");
             else
-                ExpandedRowIndex(SelfIndex, TotalIndex, -CTreeViewItem2Count, IsFirstLevel, IsMouseOver);
+                ExpandedRowIndex(SelfIndex, TotalIndex, -CTreeViewItemCount, IsFirstLevel, IsMouseOver);
             //Debug.WriteLine("SelfIndex + tempNum :" + (SelfIndex + tempNum) + "CTreeViewItem2Count" + CTreeViewItem2Count);
             base.OnCollapsed(e);
 
             if (RowNumChanged == null)
                 Debug.WriteLine("RowNumChanged event is not subsribed");
             else
-                RowNumChanged?.Invoke(-CTreeViewItem2Count);
+                RowNumChanged?.Invoke(-CTreeViewItemCount);
         }
 
         protected override void OnExpanded(RoutedEventArgs e)
@@ -81,17 +88,17 @@ namespace PrimaryInterface1._0.Controls
             if (ExpandedRowIndex == null)
                 Debug.WriteLine("ExpandedRowIndex event is not subscribed");
             else
-                ExpandedRowIndex?.Invoke(SelfIndex, TotalIndex, CTreeViewItem2Count, IsFirstLevel, IsMouseOver);
+                ExpandedRowIndex?.Invoke(SelfIndex, TotalIndex, CTreeViewItemCount, IsFirstLevel, IsMouseOver);
             //Debug.WriteLine("SelfIndex + tempNum :" + (SelfIndex + tempNum) + "CTreeViewItem2Count" + CTreeViewItem2Count);
             base.OnExpanded(e);
 
             if (RowNumChanged == null)
                 Debug.WriteLine("RowNumChanged event is not subsribed");
             else
-                RowNumChanged?.Invoke(CTreeViewItem2Count);
+                RowNumChanged?.Invoke(CTreeViewItemCount);
         }
 
-        private void CTreeViewItem2_ExpandedRowIndex(int selfIndex, int Index, int num, bool Level, bool origin)
+        private void CTreeViewItem_ExpandedRowIndex(int selfIndex, int Index, int num, bool Level, bool origin)
         {
             if (SelectedRowIndex == null)
                 Debug.WriteLine("ExpandedRowIndex event is not subscribed");
@@ -174,7 +181,7 @@ namespace PrimaryInterface1._0.Controls
                 SelectedRowIndex?.Invoke(TotalIndex, this, false);
         }
 
-        private void CTreeViewItem2_SelectedRowIndex(int Index, object item, bool IsMouseSelect)
+        private void CTreeViewItem_SelectedRowIndex(int Index, object item, bool IsMouseSelect)
         {
             if (SelectedRowIndex == null)
                 Debug.WriteLine("SelectedRowIndex event is not subscribed");
@@ -184,6 +191,7 @@ namespace PrimaryInterface1._0.Controls
 
         protected override void OnSelected(RoutedEventArgs e)
         {
+            return;
             if (SelfIndex == 0 && Parent != null)
             {
                 foreach (var Element in LogicalTreeHelper.GetChildren(Parent))
@@ -227,7 +235,7 @@ namespace PrimaryInterface1._0.Controls
         #endregion
 
         private bool OriginalSource { get; set; }
-        private int CTreeViewItem2Count { get; set; }
+        private int CTreeViewItemCount { get; set; }
         public bool IsFirstLevel { get; set; }
         public int SelfIndex { get; set; }
         public int TotalIndex { get; set; }
@@ -256,9 +264,9 @@ namespace PrimaryInterface1._0.Controls
             {
                 if (Element is CTreeViewItem)
                 {
-                    CTreeViewItem2Count++;
-                    ((CTreeViewItem)Element).SelectedRowIndex += CTreeViewItem2_SelectedRowIndex;
-                    ((CTreeViewItem)Element).ExpandedRowIndex += CTreeViewItem2_ExpandedRowIndex;
+                    CTreeViewItemCount++;
+                    ((CTreeViewItem)Element).SelectedRowIndex += CTreeViewItem_SelectedRowIndex;
+                    ((CTreeViewItem)Element).ExpandedRowIndex += CTreeViewItem_ExpandedRowIndex;
                 }
             }
             base.OnInitialized(e);
@@ -269,10 +277,10 @@ namespace PrimaryInterface1._0.Controls
             base.AddChild(value);
             if (value is CTreeViewItem)
             {
-                CTreeViewItem2Count++;
+                CTreeViewItemCount++;
                 CTreeViewItem temp = value as CTreeViewItem;
-                temp.SelectedRowIndex += CTreeViewItem2_SelectedRowIndex;
-                temp.ExpandedRowIndex += CTreeViewItem2_ExpandedRowIndex;
+                temp.SelectedRowIndex += CTreeViewItem_SelectedRowIndex;
+                temp.ExpandedRowIndex += CTreeViewItem_ExpandedRowIndex;
                 if (temp.SelfIndex == 0)
                 {
                     int Index = 0;
@@ -449,26 +457,16 @@ namespace PrimaryInterface1._0.Controls
             }
         }
 
-        public delegate void ItemsStateChangedHandler(List<ItemInfo> Source);
+        public delegate void ItemsStateChangedHandler(ItemInfo Source);
         public event ItemsStateChangedHandler ItemsStateChanged;
         private void Temp_ExpandedRowIndex(int selfIndex, int Index, int num, bool Level, bool origin)
         {
+            //new notify mechanism 
+            if (ItemsStateChanged == null)
+                Debug.WriteLine("Nobody subscribes ItemsStateChanged");
+            ItemsStateChanged?.Invoke(new ItemInfo() { Position = selfIndex, IsExpanded = num > 0 });
+            //old notify mechanism
             AddNewRanks = new NewAddRanks() { SelfIndex = selfIndex, RanksCount = num, RanksIndex = Index, IsFirstLevel = Level, IsOrigin = origin };
-            //for (int i = 0; i < num; i++)
-            //{
-            //    if (Direction == _Direction.Left)
-            //    {
-            //        ItemsInfoList.Insert(selfIndex, new ItemInfo() { IsRootItem = false, ItemName = string.Format("Input{0}", (1 + i)) });
-            //    }
-            //    else
-            //    {
-            //        ItemsInfoList.Insert(selfIndex, new ItemInfo() { IsRootItem = false, ItemName = string.Format("Output{0}", (1 + i)) });
-            //    }
-            //}
-            //for (int i = 0; i < -num; i++)
-            //{
-            //    ItemsInfoList.RemoveAt(selfIndex);
-            //}
 
             if (Index < CurrentSelectedRow)
             {
@@ -496,19 +494,18 @@ namespace PrimaryInterface1._0.Controls
             }
         }
 
+        public delegate void ItemsSelectedChangedHandler(int Index, object item);
+        public event ItemsSelectedChangedHandler ItemsSelectedChanged;
         private void Temp_SelectedRowIndex(int Index, object item, bool IsMouseSelect)
         {
-            //Debug.WriteLine("select index is " + Index);
             if (IsMouseSelect)
             {
+                if (ItemsSelectedChanged == null)
+                    Debug.WriteLine("Nobody subscribed the event ItemsSelectedChanged");
+                ItemsSelectedChanged?.Invoke(Index, item);
                 SelectRowIndex = Index;
                 CurrentSelectedRow = Index;
             }
-            //if (item is CTreeViewItem2)
-            //{
-            //    CTreeViewItem2 TempItem = item as CTreeViewItem2;
-            //    TempItem.MouseSelected = IsMouseSelect;
-            //}
         }
 
         private void Temp_RowNumChanged(int Delta)
@@ -534,20 +531,21 @@ namespace PrimaryInterface1._0.Controls
             }
         }
 
-        public int RemoveCTreeViewItem(string Header)
+        public int RemoveCTreeViewItem(DeviceModel RemoveDeviceModel)
         {
             int Result = -1;
             CTreeViewItem temp = null;
             foreach (var item in Items)
             {
-                if (item is CTreeViewItem && (string)((CTreeViewItem)item).Header == Header)
+                if (item is CTreeViewItem && (DeviceModel)((CTreeViewItem)item).Tag == RemoveDeviceModel)
                 {
                     temp = (CTreeViewItem)item;
                     Result = Items.IndexOf(temp);
                     break;
                 }
             }
-            //Items.Remove(temp);
+            if (Result == -1)
+                return Result;
             foreach (CTreeViewItem item in FirstLevelItem)
             {
                 if (item.TotalIndex > temp.TotalIndex)
@@ -557,45 +555,9 @@ namespace PrimaryInterface1._0.Controls
                 }
             }
             this.FirstLevelItem.Remove(temp);
-            if (Result != -1)
-                FirstLevelItemState.RemoveAt(Result);
+            FirstLevelItemState.RemoveAt(Result);
+            Items.Remove(temp);
             return Result;
-        }
-
-        private List<ItemInfo> ItemsInfoList = new List<ItemInfo>();
-        protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
-        {
-            return;
-            if (e.NewItems != null)
-            {
-                foreach (DeviceModel item in e.NewItems)
-                {
-                    DeviceModel TempDeviceModel = item as DeviceModel;
-                    CTreeViewItem ItemRoot = new CTreeViewItem() { Header = TempDeviceModel.DeviceName };
-                    ItemsInfoList.Add(new ItemInfo() { IsRootItem = true, ItemName = TempDeviceModel.DeviceName });
-                    foreach (DeviceInterface i in TempDeviceModel.InterfaceList)
-                    {
-                        if (Direction == _Direction.Left)
-                        {
-                            ItemRoot.AddCTreeViewItem(new CTreeViewItem() { Header = "Input" + i.InterfaceName });
-                        }
-                        else
-                        {
-                            ItemRoot.AddCTreeViewItem(new CTreeViewItem() { Header = "Output" + i.InterfaceName });
-                        }
-                    }
-                    this.InitialChildEventAndInfo(ItemRoot);
-                }
-            }
-            if (e.OldItems != null)
-            {
-                return;
-                foreach (DeviceModel item in e.OldItems)
-                {
-                    int Index = this.RemoveCTreeViewItem(item.DeviceName);
-                }
-            }
-            base.OnItemsChanged(e);
         }
 
         protected override void AddChild(object value)
@@ -651,8 +613,8 @@ namespace PrimaryInterface1._0.Controls
 
     public struct ItemInfo
     {
-        public bool IsRootItem;
-        public string ItemName;
+        public bool IsExpanded;
+        public int Position;
     }
     public enum _Direction
     {

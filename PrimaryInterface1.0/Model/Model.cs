@@ -85,5 +85,27 @@ namespace PrimaryInterface1._0.Model
                 this.RaisePropertyChanged("ColumnState");
             }
         }
+
+        private bool singlebool;
+        public bool SingleBool
+        {
+            get { return singlebool; }
+            set
+            {
+                singlebool = value;
+                this.RaisePropertyChanged("SingleBool");
+            }
+        }
+
+        private bool isseclect;
+        public bool IsSelect
+        {
+            get { return isseclect; }
+            set
+            {
+                isseclect = value;
+                this.RaisePropertyChanged("IsSelect");
+            }
+        }
     }
 }
