@@ -46,6 +46,38 @@ namespace PrimaryInterface1._0.Core
             get { return _RowCellState; }
         }
 
+        private int _SelectRow = 0;
+        public int SelectRow
+        {
+            get { return _SelectRow; }
+            set
+            {
+                if (value < 0 && value >= _RowCellState.Count)
+                    return;
+                if (_SelectRow >= 0 && _SelectRow < _RowCellState.Count)
+                    _RowCellState[_SelectRow].IsSelect = false;
+                _SelectRow = value;
+                _RowCellState[_SelectRow].IsSelect = true;
+            }
+        }
+
+        private int _SelectColumn = 0;
+        public int SelectColumn
+        {
+            get { return _SelectColumn; }
+            set
+            {
+                if (value < 0 && value >= _ColumnCellState.Count)
+                    return;
+                if (_SelectColumn >= 0 && _SelectColumn < _ColumnCellState.Count)
+                    _ColumnCellState[_SelectColumn].IsSelect = false;
+                _SelectColumn = value;
+                _ColumnCellState[_SelectColumn].IsSelect = true;
+            }
+        }
+
+        public int RemoveIndex { get; set; }
+
         public ViewModel()
         {
             _DataCollection.CollectionChanged += _DataCollection_CollectionChanged;
@@ -54,40 +86,46 @@ namespace PrimaryInterface1._0.Core
 
         private void _DataCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            foreach (var item in e.NewItems)
+            if (e.NewItems!=null)
             {
-                if (!(item is DeviceModel))
-                    continue;
-                DeviceModel device = item as DeviceModel;
+                foreach (var item in e.NewItems)
+                {
+                    if (!(item is DeviceModel))
+                        continue;
+                    DeviceModel device = item as DeviceModel;
 
-                _InnerDeviceList.Add(device);
-                _ConstructionHelper.Add(device);
-                foreach (DeviceInterface element in device.InterfaceList)
-                {
-                    _ConstructionHelper.Add(element);
-                }
-                for (int i = 0; i < device.InterfaceCount+1; i++)
-                {
-                    _ColumnCellState.Add(new Model.CellState() { RowState = false, ColumnState = false });
-                    _RowCellState.Add(new Model.CellState() { RowState = false, ColumnState = false });
-                    PositionHelper.Add(PositionHelperIndex++);
+                    _InnerDeviceList.Add(device);
+                    _ConstructionHelper.Add(device);
+                    foreach (DeviceInterface element in device.InterfaceList)
+                    {
+                        _ConstructionHelper.Add(element);
+                    }
+                    for (int i = 0; i < device.InterfaceCount + 1; i++)
+                    {
+                        _ColumnCellState.Add(new Model.CellState() { RowState = false, ColumnState = false });
+                        _RowCellState.Add(new Model.CellState() { RowState = false, ColumnState = false });
+                        PositionHelper.Add(PositionHelperIndex++);
+                    }
                 }
             }
-            foreach (var item in e.OldItems)
+            if(e.OldItems!=null)
             {
-                if (!(item is DeviceModel))
-                    continue;
-                DeviceModel device = item as DeviceModel;
-                int Index = _InnerDeviceList.IndexOf(device);
-                int RemoveIndex = _ConstructionHelper.IndexOf(device);
-                for (int i = 0; i < device.InterfaceCount + 1; i++)
+                foreach (var item in e.OldItems)
                 {
-                    _ColumnCellState.RemoveAt(RemoveIndex);
-                    _RowCellState.RemoveAt(RemoveIndex);
-                    _ConstructionHelper.RemoveAt(RemoveIndex);
-                    _PositionHelper.RemoveAt(RemoveIndex);
+                    if (!(item is DeviceModel))
+                        continue;
+                    DeviceModel device = item as DeviceModel;
+                    int Index = _InnerDeviceList.IndexOf(device);
+                    RemoveIndex = _ConstructionHelper.IndexOf(device);
+                    for (int i = 0; i < device.InterfaceCount + 1; i++)
+                    {
+                        _ColumnCellState.RemoveAt(RemoveIndex);
+                        _RowCellState.RemoveAt(RemoveIndex);
+                        _ConstructionHelper.RemoveAt(RemoveIndex);
+                        _PositionHelper.RemoveAt(RemoveIndex);
+                    }
+                    _InnerDeviceList.RemoveAt(Index);
                 }
-                _InnerDeviceList.RemoveAt(Index);
             }
         }
     }

@@ -18,15 +18,7 @@ namespace PrimaryInterface1._0.Controls
 
     public class CToggleBtn : ToggleButton
     {
-        public delegate void CheckedAndExpandedHandler(int Row, int Column, bool IsRowExpanded, bool IsColumnExpanded);
-        public event CheckedAndExpandedHandler CheckedAndExpanded;
-
-        public static readonly DependencyProperty ChangedIconProperty = DependencyProperty.Register("ChangedIcon", typeof(bool), typeof(CToggleBtn), new PropertyMetadata(false, OnIconChanged));
-
-        private static void OnIconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            CToggleBtn temp = d as CToggleBtn;
-        }
+        public static readonly DependencyProperty ChangedIconProperty = DependencyProperty.Register("ChangedIcon", typeof(bool), typeof(CToggleBtn), new PropertyMetadata(false));
 
         public bool ChangedIcon
         {
@@ -34,50 +26,36 @@ namespace PrimaryInterface1._0.Controls
             set { SetValue(ChangedIconProperty, value); }
         }
 
+        public object ObjectTag1 { get; set; }
+        public object OBjectTag2 { get; set; }
+
+
+        public delegate void ExpandCellHandler(bool Expand, CToggleBtn Source);
+        public event ExpandCellHandler ExpandCell;
+        private bool IsOpen = false;
         protected override void OnClick()
         {
-            ChangedIcon = !ChangedIcon;
-            RowExpanded = ColumnExpanded = ChangedIcon;
-            Debug.WriteLine("++++++++++++++++RowIndex is " + RowIndex + " ColumnIndex " + ColumnIndex + " IsExpanded " + ChangedIcon);
-            if (CheckedAndExpanded == null)
-                Debug.WriteLine("CheckedAndExpanded event is not subscribed");
-            else
-                CheckedAndExpanded?.Invoke(RowIndex, ColumnIndex, RowExpanded, ColumnExpanded);
+            IsOpen = !IsOpen;
+            ExpandCell?.Invoke(IsOpen, this);
             base.OnClick();
         }
 
-        public int PositionRow { get; set; }
-        public int PositionColumn { get; set; }
-
-        public int RowIndex { get; set; }
-        public int ColumnIndex { get; set; }
-
-        private bool rowexpanded;
-        public bool RowExpanded
+        public delegate void IsMouseOverHandler(bool IsMouseSelect, CToggleBtn Source);
+        public event IsMouseOverHandler IsMouseSelect;
+        protected override void OnMouseEnter(MouseEventArgs e)
         {
-            get { return rowexpanded; }
-            set
-            {
-                rowexpanded = value;
-                if (rowexpanded && columnexpanded)
-                    ChangedIcon = true;
-                else
-                    ChangedIcon = false;
-            }
+            IsMouseSelect?.Invoke(true, this);
+            base.OnMouseEnter(e);
         }
-        private bool columnexpanded;
-        public bool ColumnExpanded
+
+        protected override void OnMouseLeave(MouseEventArgs e)
         {
-            get { return columnexpanded; }
-            set
-            {
-                columnexpanded = value;
-                if (rowexpanded && columnexpanded)
-                    ChangedIcon = true;
-                else
-                    ChangedIcon = false;
-            }
+            IsMouseSelect?.Invoke(false, this);
+            base.OnMouseLeave(e);
         }
+
+
+
 
         protected override void OnInitialized(EventArgs e)
         {
@@ -103,25 +81,27 @@ namespace PrimaryInterface1._0.Controls
             set { SetValue(IsCommonProperty, value); }
         }
 
-        public delegate void IsMouseOverHandler(bool IsMouseSelect, object Itself);
+        public delegate void IsMouseOverHandler(bool IsMouseSelect, CLabel Source);
         public event IsMouseOverHandler IsMouseSelect;
 
         protected override void OnMouseEnter(MouseEventArgs e)
         {
-            Debug.WriteLine("visibility is " + this.Visibility);
-            Debug.WriteLine("source" + PositionRow + " " + PositionColumn);
-            Debug.WriteLine("source2" + Grid.GetRow(this) + " " + Grid.GetColumn(this));
+            //Debug.WriteLine("visibility is " + this.Visibility);
+            //Debug.WriteLine("source" + PositionRow + " " + PositionColumn);
+            //Debug.WriteLine("source2" + Grid.GetRow(this) + " " + Grid.GetColumn(this));
             IsMouseSelect?.Invoke(true, this);
             base.OnMouseEnter(e);
         }
-
-        
 
         protected override void OnMouseLeave(MouseEventArgs e)
         {
             IsMouseSelect?.Invoke(false, this);
             base.OnMouseLeave(e);
         }
+
+        public object ObjectTag1 { get; set; }
+        public object OBjectTag2 { get; set; }
+
 
         public int PositionRow { get; set; }
         public int PositionColumn { get; set; }

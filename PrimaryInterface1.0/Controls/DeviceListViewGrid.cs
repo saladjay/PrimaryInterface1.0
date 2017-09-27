@@ -72,7 +72,7 @@ namespace PrimaryInterface1._0.Controls
         private List<object> ConstructionHelper = new List<object>();
         private List<CellState> RowCreateHelper = new List<Model.CellState>();
         private List<int> PositionHelper = new List<int>();
-        private int PositionHelperIndex = 0;
+
         private void DeviceListItemsSource_ExtendedItemsChanged(object item, bool AddOrRemove)
         {
             if (!(item is DeviceModel))

@@ -23,13 +23,11 @@ namespace PrimaryInterface1._0
     /// </summary>
     public partial class MainWindow : Window
     {
-        ObservableCollection<DeviceModel> collection = new ObservableCollection<DeviceModel>();
         ViewModel SourceData = new ViewModel();
         public MainWindow()
         {
             InitializeComponent();
-            //interfacegrid.ItemsSource = collection;
-            ConnectView.ItemsSource = SourceData.DataCollection;
+            ConnectView.DataSource = SourceData;
 
         }
 

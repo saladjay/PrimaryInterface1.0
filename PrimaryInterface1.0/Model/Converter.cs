@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 
 namespace PrimaryInterface1._0.Model
@@ -29,13 +30,17 @@ namespace PrimaryInterface1._0.Model
         {
             get { return SingleTon<SelectedConverterForCLabel>.GetInstance(); }
         }
+        public static ScrollBarVisibilityConverter PaddingConverter
+        {
+            get { return SingleTon<ScrollBarVisibilityConverter>.GetInstance(); }
+        }
     }
 
     public sealed class StateConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            Debug.WriteLine("StateConverter");
+            //Debug.WriteLine("StateConverter");
             return (bool)values[0] && (bool)values[1];
         }
 
@@ -65,12 +70,12 @@ namespace PrimaryInterface1._0.Model
             //Debug.WriteLine("VisibilityConvetter");
             if ((bool)values[0] && (bool)values[1])
             {
-                Debug.WriteLine("VisibilityConverter return visible");
+                //Debug.WriteLine("VisibilityConverter return visible");
                 return Visibility.Visible;
             }
             else
             {
-                Debug.WriteLine("VisibilityConverter return collapsed");
+                //Debug.WriteLine("VisibilityConverter return collapsed");
                 return Visibility.Collapsed;
             }
         }
@@ -89,6 +94,22 @@ namespace PrimaryInterface1._0.Model
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public sealed class ScrollBarVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if ((Visibility)value == Visibility.Collapsed)
+                return Visibility.Hidden;
+            else
+                return (Visibility)value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
