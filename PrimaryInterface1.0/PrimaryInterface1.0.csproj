@@ -68,7 +68,6 @@
     </Compile>
     <Compile Include="Controls\AttachedPropertyScroller.cs" />
     <Compile Include="Controls\CellBase.cs" />
-    <Compile Include="Controls\CellFactory.cs" />
     <Compile Include="Controls\CommonDependencyPropertyAttribute.cs" />
     <Compile Include="Controls\DeviceConnectView.cs" />
     <Compile Include="Controls\DeviceList.cs" />
